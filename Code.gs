@@ -86,19 +86,19 @@ function testOpenAI() {
 // Create menu when the document opens
 function onOpen() {
   DocumentApp.getUi()
-    .createMenu('GPT Extension')
-    .addItem('Show Sidebar', 'showSidebar')
+    .createMenu('GPT Помощник')
+    .addItem('Показать панель', 'showSidebar')
     .addSeparator()
-    .addItem('Summarize Selection (in Russian)', 'summarizeSelection')
-    .addItem('Improve Writing (in Russian)', 'improveWriting')
-    .addItem('Translate to English', 'translateToEnglish')
+    .addItem('Сделать краткое содержание', 'summarizeSelection')
+    .addItem('Улучшить текст', 'improveWriting')
+    .addItem('Перевести на английский', 'translateToEnglish')
     .addSeparator()
-    .addSubMenu(DocumentApp.getUi().createMenu('Format')
-      .addItem('Fix Grammar (in Russian)', 'fixGrammar')
-      .addItem('Make Formal (in Russian)', 'makeFormal')
-      .addItem('Make Casual (in Russian)', 'makeCasual'))
+    .addSubMenu(DocumentApp.getUi().createMenu('Форматирование')
+      .addItem('Исправить грамматику', 'fixGrammar')
+      .addItem('Формальный стиль', 'makeFormal')
+      .addItem('Разговорный стиль', 'makeCasual'))
     .addSeparator()
-    .addItem('Settings', 'showSettings')
+    .addItem('Настройки', 'showSettings')
     .addToUi();
 }
 

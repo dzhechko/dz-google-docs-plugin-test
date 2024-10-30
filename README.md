@@ -1,100 +1,100 @@
-# GPT Extension for Google Docs
+# GPT Помощник для Google Docs 🚀
 
-A powerful Google Docs extension that integrates OpenAI's GPT models to enhance your document editing experience. The extension provides various text processing capabilities with outputs in Russian and English translations.
+Мощное расширение для Google Docs, которое использует возможности GPT для улучшения работы с текстом. Расширение предлагает различные инструменты обработки текста с выводом на русском языке и возможностью перевода на английский.
 
-## Features
+## ✨ Возможности
 
-### Text Processing
-- **Summarize Text (in Russian)**: Create concise summaries of selected text
-- **Improve Writing (in Russian)**: Enhance text clarity and professionalism
-- **Fix Grammar (in Russian)**: Correct grammatical errors
-- **Make Formal/Casual (in Russian)**: Adjust text tone
-- **Translate to English**: Convert text from any language to English
+### 🎯 Обработка текста
+- **Краткое содержание**: Автоматическое создание сжатого изложения выбранного текста
+- **Улучшение текста**: Повышение качества и профессионализма написанного
+- **Исправление грамматики**: Автоматическая проверка и исправление ошибок
+- **Стилистика**: Преобразование в формальный или разговорный стиль
+- **Перевод**: Перевод текста на английский язык
 
-### User Interface
-- **Convenient Sidebar**: Easy-to-use interface for text processing
-- **Custom Menu**: Quick access to all features from the Google Docs menu
-- **Settings Panel**: Customize API and model parameters
+### 💻 Интерфейс
+- **Боковая панель**: Удобный интерфейс для работы с текстом
+- **Контекстное меню**: Быстрый доступ ко всем функциям
+- **Панель настроек**: Гибкая настройка параметров API и модели
 
-### Settings Configuration
-- Base URL for OpenAI API
-- Model selection (GPT-3.5-turbo, GPT-4, GPT-4-turbo-preview, Claude-3-Sonnet, or custom)
-- Temperature adjustment (0-1)
-- Max tokens limit (150+)
+### ⚙️ Настройки
+- Базовый URL для API OpenAI
+- Выбор модели:
+  - GPT-3.5-turbo
+  - GPT-4
+  - GPT-4-turbo-preview
+  - Claude-3-Sonnet
+  - Пользовательская модель
+- Настройка температуры (0-1)
+- Установка максимальной длины ответа (от 150 токенов)
 
-## Installation
+## 🚀 Установка
 
-1. Open Google Apps Script editor
-2. Create new project
-3. Copy the following files into your project:
+1. Откройте редактор Google Apps Script
+2. Создайте новый проект
+3. Скопируйте следующие файлы в проект:
    - `Code.gs`
    - `Sidebar.html`
    - `Settings.html`
-4. Set up your OpenAI API key:
-   - Go to Project Settings
-   - Click on "Script Properties"
-   - Add new property:
-     - Name: `OPENAI_API_KEY`
-     - Value: Your OpenAI API key
-5. Save and deploy as Google Docs add-on
+4. Настройте ключ API OpenAI:
+   - Перейдите в Настройки проекта
+   - Нажмите "Script Properties"
+   - Добавьте новое свойство:
+     - Имя: `OPENAI_API_KEY`
+     - Значение: Ваш ключ API OpenAI
+5. Сохраните и опубликуйте как дополнение для Google Docs
 
-## Usage
+## 📝 Использование
 
-1. Open a Google Doc
-2. Find "GPT Extension" in the menu bar
-3. Choose one of the following options:
-   - Use the sidebar for interactive text processing
-   - Use direct menu options for quick actions
-   - Configure settings for customization
+### Основные функции
+1. Откройте документ Google Docs
+2. Найдите меню "GPT Помощник"
+3. Выберите нужную функцию:
+   - Используйте боковую панель для интерактивной работы
+   - Используйте меню для быстрых действий
+   - Настройте параметры в разделе настроек
 
-### Sidebar Usage
-1. Click "Show Sidebar" from the GPT Extension menu
-2. Enter or paste your text
-3. Choose desired operation
-4. Review the result
-5. Click "Insert to Document" to add the processed text
+### Боковая панель
+1. Нажмите "Показать панель"
+2. Введите или вставьте текст
+3. Выберите нужное действие
+4. Просмотрите результат
+5. Нажмите "Вставить в документ"
 
-### Settings Configuration
-1. Click "Settings" in the GPT Extension menu
-2. Configure:
-   - API Base URL
-   - Model selection
-   - Temperature
-   - Max tokens
-3. Click Save to apply changes
+### Настройки
+1. Откройте "Настройки" в меню GPT Помощник
+2. Настройте:
+   - URL API
+   - Модель
+   - Температуру
+   - Максимальное количество токенов
+3. Нажмите "Сохранить"
 
-## Project Structure
+## 🔧 Структура проекта
 
 ```
-├── Code.gs                  # Main script file with core functionality
-├── Sidebar.html            # UI for prompts and responses
-├── Settings.html           # Settings panel interface
-└── appsscript.json         # Project configuration (auto-generated)
+├── Code.gs                  # Основной файл с логикой
+├── Sidebar.html            # Интерфейс боковой панели
+├── Settings.html           # Интерфейс настроек
+└── appsscript.json         # Конфигурация проекта
 ```
 
-## Technical Details
+## 📋 Требования
 
-- Built using Google Apps Script
-- Integrates with OpenAI API
-- Supports multiple GPT models
-- Handles multiple languages with focus on Russian output
-- Implements error handling and loading states
-- Uses Script Properties for secure API key storage
+- Аккаунт Google Workspace
+- Ключ API OpenAI
+- Браузер Google Chrome (рекомендуется)
 
-## Requirements
+## 🔐 Безопасность
 
-- Google Workspace account
-- OpenAI API key
-- Google Chrome browser (recommended)
+Ключ API OpenAI хранится в защищенном хранилище Script Properties. Никогда не передавайте свой ключ API третьим лицам и не включайте его напрямую в код.
 
-## Security Note
+## 🤝 Участие в разработке
 
-The extension stores your OpenAI API key in Google Apps Script's secure Script Properties. Never share your API key or include it directly in the code.
+Мы приветствуем ваши предложения по улучшению проекта! Создавайте issues и pull requests.
 
-## Contributing
+## 📄 Лицензия
 
-Feel free to submit issues and enhancement requests!
+[MIT License](LICENSE)
 
-## License
-
-[MIT License](LICENSE) 
+---
+Сделано с ❤️ для удобной работы с текстом 
