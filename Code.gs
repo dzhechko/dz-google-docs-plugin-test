@@ -314,4 +314,24 @@ function translateToEnglish() {
   } catch (error) {
     DocumentApp.getUi().alert('Error: ' + error.toString());
   }
+}
+
+// Add this function to handle sidebar requests
+function processTextWithGPT(text, action) {
+  switch(action) {
+    case 'summarize':
+      return callOpenAI(getPromptInLanguage('summarize', text));
+    case 'improve':
+      return callOpenAI(getPromptInLanguage('improve', text));
+    case 'grammar':
+      return callOpenAI(getPromptInLanguage('grammar', text));
+    case 'translate':
+      return callOpenAI(`Please translate the following text to English, maintaining the original meaning and tone:\n\n${text}`);
+    case 'formal':
+      return callOpenAI(getPromptInLanguage('formal', text));
+    case 'casual':
+      return callOpenAI(getPromptInLanguage('casual', text));
+    default:
+      throw new Error('Invalid action specified');
+  }
 } 

@@ -181,6 +181,114 @@ function fixGrammar() {
   }
 }
 
+## Set Up the Sidebar UI that can provide a user-friendly interface where users enter prompts and view results
+
+Code.gs
+```
+function showSidebar() {
+  const html = HtmlService.createHtmlOutputFromFile('Sidebar')
+    .setTitle('GPT Assistant')
+    .setWidth(300);
+  DocumentApp.getUi().showSidebar(html);
+}
+
+// Add this to your onOpen() menu
+// ... existing menu code ...
+.addItem('Show GPT Assistant', 'showSidebar')
+// ... rest of menu code ...
+```
+
+Sidebar.html
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+        #promptInput {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        #response {
+            width: 100%;
+            min-height: 150px;
+            margin-top: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+        }
+        .button-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+        #loading {
+            display: none;
+            color: #666;
+            text-align: center;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <textarea id="promptInput" placeholder="Enter your prompt here..."></textarea>
+    <div class="button-container">
+        <button onclick="sendPrompt()">Send</button>
+        <button onclick="clearAll()">Clear</button>
+    </div>
+    <div id="loading">Processing...</div>
+    <div id="response"></div>
+
+    <script>
+        function sendPrompt() {
+            const prompt = document.getElementById('promptInput').value;
+            if (!prompt.trim()) return;
+
+            document.getElementById('loading').style.display = 'block';
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('response').textContent = result;
+                })
+                .withFailureHandler(function(error) {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('response').textContent = 'Error: ' + error;
+                })
+                .callOpenAI(prompt);
+        }
+
+        function clearAll() {
+            document.getElementById('promptInput').value = '';
+            document.getElementById('response').textContent = '';
+        }
+    </script>
+</body>
+</html>
+```
+
 ## Settings panel
 <!DOCTYPE html>
 <html>

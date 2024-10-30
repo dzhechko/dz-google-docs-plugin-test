@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            color: #333;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        #promptInput {
+            width: 100%;
+            height: 100px;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            font-size: 14px;
+        }
+        .button-container {
+            display: flex;
+            gap: 8px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            flex: 1;
+            min-width: 120px;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #response {
+            width: 100%;
+            min-height: 150px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+            color: #666;
+            margin: 10px 0;
+        }
+        .error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 8px;
+            padding: 8px;
+            background-color: #fde7e7;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <textarea id="promptInput" placeholder="Enter or paste your text here..."></textarea>
+        
+        <div class="button-container">
+            <button onclick="processText('summarize')">Summarize (RU)</button>
+            <button onclick="processText('improve')">Improve (RU)</button>
+        </div>
+        
+        <div class="button-container">
+            <button onclick="processText('grammar')">Fix Grammar (RU)</button>
+            <button onclick="processText('translate')">Translate to EN</button>
+        </div>
+        
+        <div class="button-container">
+            <button onclick="processText('formal')">Make Formal (RU)</button>
+            <button onclick="processText('casual')">Make Casual (RU)</button>
+        </div>
+
+        <div id="loading">Processing...</div>
+        <div id="error" class="error"></div>
+        
+        <div id="response"></div>
+        
+        <div class="button-container">
+            <button onclick="insertToDoc()" id="insertButton" disabled>Insert to Document</button>
+            <button onclick="clearAll()">Clear All</button>
+        </div>
+    </div>
+
+    <script>
+        let currentResponse = '';
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            const buttons = document.getElementsByTagName('button');
+            for (let button of buttons) {
+                button.disabled = show;
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = message ? 'block' : 'none';
+        }
+
+        function processText(action) {
+            const text = document.getElementById('promptInput').value;
+            if (!text.trim()) {
+                showError('Please enter some text first.');
+                return;
+            }
+
+            showError('');
+            showLoading(true);
+
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    showLoading(false);
+                    document.getElementById('response').textContent = result;
+                    currentResponse = result;
+                    document.getElementById('insertButton').disabled = false;
+                })
+                .withFailureHandler(function(error) {
+                    showLoading(false);
+                    showError('Error: ' + error.message);
+                })
+                .processTextWithGPT(text, action);
+        }
+
+        function insertToDoc() {
+            if (!currentResponse) return;
+            
+            google.script.run
+                .withSuccessHandler(function() {
+                    showError('');
+                })
+                .withFailureHandler(function(error) {
+                    showError('Error inserting text: ' + error.message);
+                })
+                .insertTextBelow(currentResponse, 'GPT Response:');
+        }
+
+        function clearAll() {
+            document.getElementById('promptInput').value = '';
+            document.getElementById('response').textContent = '';
+            document.getElementById('insertButton').disabled = true;
+            currentResponse = '';
+            showError('');
+        }
+    </script>
+</body>
+</html> 
