@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #444;
+        }
+        input[type="text"], 
+        input[type="number"], 
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .slider {
+            flex-grow: 1;
+        }
+        .value-display {
+            min-width: 40px;
+            text-align: right;
+            color: #666;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        #customModel {
+            display: none;
+            margin-top: 8px;
+        }
+        #saveStatus {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #e6f4ea;
+            color: #137333;
+        }
+        .error {
+            background-color: #fce8e6;
+            color: #c5221f;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-group">
+        <label for="baseUrl">API Base URL</label>
+        <input type="text" id="baseUrl" placeholder="https://api.openai.com/v1">
+        <div class="info-text">The base URL for your OpenAI-compatible API endpoint</div>
+    </div>
+
+    <div class="form-group">
+        <label for="model">Model</label>
+        <select id="model">
+            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+            <option value="gpt-4">GPT-4</option>
+            <option value="gpt-4-turbo-preview">GPT-4 Turbo</option>
+            <option value="claude-3-sonnet">Claude-3-Sonnet</option>
+            <option value="custom">Custom Model</option>
+        </select>
+        <input type="text" id="customModel" placeholder="Enter custom model name">
+    </div>
+
+    <div class="form-group">
+        <label for="temperature">Temperature</label>
+        <div class="slider-container">
+            <input type="range" id="temperature" class="slider" 
+                   min="0" max="1" step="0.1" value="0.7">
+            <span id="temperatureValue" class="value-display">0.7</span>
+        </div>
+        <div class="info-text">Lower values make output more focused and deterministic</div>
+    </div>
+
+    <div class="form-group">
+        <label for="maxTokens">Max Tokens</label>
+        <input type="number" id="maxTokens" min="150" value="2000">
+        <div class="info-text">Maximum length of the generated response</div>
+    </div>
+
+    <button onclick="saveSettings()">Save Settings</button>
+    <div id="saveStatus"></div>
+
+    <script>
+        // Initialize values from stored settings
+        function loadSettings() {
+            google.script.run
+                .withSuccessHandler(function(settings) {
+                    document.getElementById('baseUrl').value = settings.baseUrl || 'https://api.openai.com/v1';
+                    document.getElementById('model').value = settings.model || 'gpt-3.5-turbo';
+                    document.getElementById('temperature').value = settings.temperature || 0.7;
+                    document.getElementById('temperatureValue').textContent = settings.temperature || 0.7;
+                    document.getElementById('maxTokens').value = settings.maxTokens || 2000;
+                    
+                    if (settings.model === 'custom') {
+                        document.getElementById('customModel').style.display = 'block';
+                        document.getElementById('customModel').value = settings.customModel || '';
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showStatus('Error loading settings: ' + error, false);
+                })
+                .getSettings();
+        }
+
+        // Handle model selection change
+        document.getElementById('model').addEventListener('change', function(e) {
+            const customModelInput = document.getElementById('customModel');
+            customModelInput.style.display = e.target.value === 'custom' ? 'block' : 'none';
+        });
+
+        // Update temperature display
+        document.getElementById('temperature').addEventListener('input', function(e) {
+            document.getElementById('temperatureValue').textContent = e.target.value;
+        });
+
+        // Show status message
+        function showStatus(message, isSuccess) {
+            const statusDiv = document.getElementById('saveStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = isSuccess ? 'success' : 'error';
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Save settings
+        function saveSettings() {
+            const settings = {
+                baseUrl: document.getElementById('baseUrl').value,
+                model: document.getElementById('model').value,
+                customModel: document.getElementById('customModel').value,
+                temperature: parseFloat(document.getElementById('temperature').value),
+                maxTokens: parseInt(document.getElementById('maxTokens').value)
+            };
+
+            google.script.run
+                .withSuccessHandler(function() {
+                    showStatus('Settings saved successfully!', true);
+                    setTimeout(() => google.script.host.close(), 1500);
+                })
+                .withFailureHandler(function(error) {
+                    showStatus('Error saving settings: ' + error, false);
+                })
+                .saveSettings(settings);
+        }
+
+        // Load settings when page loads
+        window.onload = loadSettings;
+    </script>
+</body>
+</html> 
